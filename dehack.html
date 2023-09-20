@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form>
+        <h1 style="text-align: center;">Thông tin học viên Rikkei Academy</h1>
+        <table style="margin: auto;">
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="name"></td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td><input type="text" id="age"></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" id="address"></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" name="gender" value="male" checked>Male
+                    <input type="radio" name="gender" value="female">Female
+                </td>
+            </tr>
+            <tr>
+                <td>Favorite</td>
+                <td>
+                    <input type="checkbox" value="java">java
+                    <input type="checkbox" value="javascript">javascript
+                    <input type="checkbox" value="python">Python
+                </td>
+            </tr>
+            <tr>
+                <td><input onclick="send()" type="button" value="Submit"></td>
+                <td><input onclick="resetxForm()" type="button" value="Reset"></td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        function send(){
+            var arr = document.getElementsByTagName('input');
+            var name = arr[0].value;
+            var age = arr[1].value;
+            var address = arr[2].value;
+            var check1 = arr[5].checked;
+            var check2 = arr[6].checked;
+            var check3 = arr[7].checked;
+            var gender = "";
+            var favorite = "";
+            if(arr[3].checked){
+                gender = "Male";
+            }else{
+                gender = "Female";
+            }
+            
+            for(var i=5; i<=7; i++){
+                if(arr[i].checked){
+                    favorite = favorite + arr[i].value + " ";
+                }
+            }
+            
+            if(name == "" || age == "" || address == ""){
+                alert("bạn chưa điền đầy đủ thông tin");
+                return;
+            }
+            if(isNaN(age)){
+                alert("tuổi của bạn không hợp lệ");
+                return;
+            }
+            if(check1||check2||check3){
+
+            }else{
+                alert("phải có ít nhất một lựa chọn trong mục yêu thích");
+                return;
+            }
+            var choice = confirm('kiểm tra lại thông tin của bạn\n'+name+"\n"+age+"\n"+address+"\n"+gender+"\n"+favorite)
+            if(choice==1){
+                alert("Information sent");
+            }
+        }
+        function resetxForm(){
+            document.getElementsByTagName('form')[0].reset();
+        }
+    </script>
+</body>
+
+</html>

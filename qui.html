@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // let arr = [3,7,5,2,3,2,8,8,1,8,2,81,8,1,81,1];
+
+        // let render = new Set(arr)
+        // console.log(Array.from(render));
+        let arr = [1, 2, 2, 3, 4, 4, 5, 4];
+            let newArr = arr.filter(function (item, index, self) {
+                return self.indexOf(item) === index;
+            });
+
+            console.log(newArr); // Kết quả: [1, 2, 3, 4, 5]
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin học viên Rikkei Academy</title>
+</head>
+
+<body>
+    <form id="studentForm">
+        <h1 style="text-align: center;">Thông tin học viên Rikkei Academy</h1>
+        <table style="margin: auto;">
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="name" placeholder="Nhập tên của bạn"></td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td><input type="text" id="age" placeholder="Nhập tuổi của bạn"></td>
+            </tr>
+            <tr>
+                <td>ID</td>
+                <td><input type="text" id="id" placeholder="Nhập id của bạn"></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" id="address" placeholder="Nhập quê quán của bạn"></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" name="gender" value="Male" checked>Male
+                    <input type="radio" name="gender" value="Female">Female
+                </td>
+            </tr>
+            <tr>
+                <td>Favorite</td>
+                <td>
+                    <input type="checkbox" value="java">Java
+                    <input type="checkbox" value="javascript">Javascript
+                    <input type="checkbox" value="python">Python
+                </td>
+            </tr>
+            <tr>
+                <td><input onclick="addStudent()" type="button" value="Create"></td>
+                <td><input onclick="resetForm()" type="button" value="Reset"></td>
+            </tr>
+        </table>
+    </form>
+
+    <div id="studentList" style="display: none;">
+        <h2 style="text-align: center;">Danh sách học viên</h2>
+        <table border="1px" cellpadding="15px" cellspacing="5px" style="margin: 0 auto;">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ Và Tên</th>
+                    <th>Tuổi</th>
+                    <th>ID</th>
+                    <th>Address</th>
+                    <th>Gender</th>
+                    <th>Favorite</th>
+                    <th colspan="2">Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        var students = [];
+        var studentList = document.getElementById('studentList');
+        // kiểm tra xem có dữ liệu trong local hay không
+        var savedStudents = localStorage.getItem('students');
+        if (savedStudents) {
+            students = JSON.parse(savedStudents);
+            displayStudents();
+        }
+
+        function addStudent() {
+            var name = document.getElementById('name').value;
+            var age = document.getElementById('age').value;
+            var id = document.getElementById('id').value;
+            var address = document.getElementById('address').value;
+            var gender = document.querySelector('input[name="gender"]:checked').value;
+            var favorite = [];
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+            checkboxes.forEach(function (checkbox) {
+                favorite.push(checkbox.value);
+            });
+
+            if (name === "" || age === "" || address === "") {
+                alert("Bạn chưa điền đầy đủ thông tin");
+                return;
+            }
+
+            if (isNaN(age) || age <= 0) {
+                alert("Tuổi của bạn không hợp lệ");
+                return;
+            }
+
+            students.push({
+                name: name,
+                age: age,
+                id: id,
+                address: address,
+                gender: gender,
+                favorite: favorite
+            });
+            // Lưu danh sách học viên vào localStorage
+            localStorage.setItem('students', JSON.stringify(students));
+
+            displayStudents();
+            resetForm();
+        }
+
+        function displayStudents() {
+            var studentTableBody = document.getElementById('studentTableBody');
+            studentTableBody.innerHTML = '';
+
+            students.forEach(function (student, index) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.age}</td>
+                    <td>${student.id}</td>
+                    <td>${student.address}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.favorite.join(', ')}</td>
+                    <td><button onclick="editStudent(${index})">Edit</button></td>
+                    <td><button onclick="deleteStudent(${index})">Delete</button></td>
+                `;
+                studentTableBody.appendChild(row);
+            });
+
+            if (students.length > 0) {
+                studentList.style.display = 'block';
+            } else {
+                studentList.style.display = 'none';
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('studentForm').reset();
+        }
+
+        function editStudent(index) {
+            var student = students[index];
+            document.getElementById('name').value = student.name;
+            document.getElementById('age').value = student.age; 
+            document.getElementById('id').value = student.id;
+            document.getElementById('address').value = student.address;
+            document.querySelector(`input[name="gender"][value="${student.gender}"]`).checked = true;
+
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = student.favorite.includes(checkbox.value);
+            });
+
+            students.splice(index, 1);
+            displayStudents();
+        }
+
+        function deleteStudent(index) {
+            students.splice(index, 1);
+            // Lưu danh sách học viên sau khi xóa vào localStorage
+            localStorage.setItem('students', JSON.stringify(students));
+            displayStudents();
+        }
+        displayStudents();
+    </script>
+</body>
+
+</html>
